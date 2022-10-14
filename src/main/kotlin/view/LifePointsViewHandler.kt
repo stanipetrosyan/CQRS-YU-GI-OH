@@ -12,8 +12,8 @@ class LifePointsViewHandler(eventBus: EventBus) {
       consume(it.body().mapTo(MatchStarted::class.java))
     }
     
-    eventBus.consumer<JsonObject>(DamageInflicted::class.simpleName) {
-      consume(it.body().mapTo(DamageInflicted::class.java))
+    eventBus.consumer<JsonObject>(BattleDamageInflicted::class.simpleName) {
+      consume(it.body().mapTo(BattleDamageInflicted::class.java))
     }
   }
   
@@ -23,7 +23,7 @@ class LifePointsViewHandler(eventBus: EventBus) {
     println("Giocatori con 8000 life points ciascuno")
   }
   
-  private fun consume(event: DamageInflicted) {
+  private fun consume(event: BattleDamageInflicted) {
     players[event.by] = players[event.by]!! - event.damage
     println("Il giocatore ${event.by} ha subito ${event.damage} e i suoi life point sono ${players[event.by]}")
   }

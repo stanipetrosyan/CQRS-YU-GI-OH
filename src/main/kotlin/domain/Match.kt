@@ -3,12 +3,18 @@ package domain
 import java.time.LocalDateTime
 import java.util.*
 
+data class Battle(
+  val attacker: UUID,
+  val defender: UUID
+)
+
 class Match(private val id: UUID) {
   val changes = mutableListOf<MatchEvent>()
   private var players: List<Player> = emptyList()
   private val monsters: MutableList<Monster> = mutableListOf()
   private var normalSummonPermitted: Int = 1
   private var monstersAttacked: MutableList<UUID> = mutableListOf()
+  private var battle: Battle? = null
   
   private var turn: Turn = Turn(1, Turn.State.DrawPhase)
   
@@ -20,6 +26,7 @@ class Match(private val id: UUID) {
     return turn.state == state
   }
   
+  fun isBattle(): Boolean = battle != null
   
   fun changePhaseIsPermitted(phase: Turn.State): Boolean {
     return phase > this.turn.state || (this.turn.state == Turn.State.EndPhase && phase == Turn.State.DrawPhase)
@@ -77,8 +84,13 @@ class Match(private val id: UUID) {
     return this
   }
   
-  fun inflictDamage(username: String, damage: Int): Match {
-    changes.add(DamageInflicted(this.id, username, damage, LocalDateTime.now()))
+  fun inflictDamage(username: String, damage: Int, type: DamageType): Match {
+    val event = when(type) {
+      DamageType.Battle -> BattleDamageInflicted(this.id, username, damage, LocalDateTime.now())
+      DamageType.Direct -> DirectDamageInflicted(this.id, username, damage, LocalDateTime.now())
+      DamageType.Effect -> EffectDamageInflicted(this.id, username, damage, LocalDateTime.now())
+    }
+    changes.add(event)
     return this
   }
   
@@ -88,7 +100,6 @@ class Match(private val id: UUID) {
         is MatchStarted -> apply(event)
         is CardDrew -> apply(event)
         is MonsterNormalSummoned -> apply(event)
-        is DamageInflicted -> apply(event)
         is DrawPhaseSet -> apply(event)
         is StandbyPhaseSet -> apply(event)
         is MainPhaseOneSet -> apply(event)
@@ -97,6 +108,9 @@ class Match(private val id: UUID) {
         is EndPhaseSet -> apply(event)
         is DirectAttackDeclared -> apply(event)
         is AttackDeclared -> apply(event)
+        is BattleDamageInflicted -> apply(event)
+        is DirectDamageInflicted -> apply(event)
+        is EffectDamageInflicted -> apply(event)
       }
     }
     
@@ -111,11 +125,18 @@ class Match(private val id: UUID) {
     this.monstersAttacked.add(event.attackerId)
   }
   
-  private fun apply(event: DamageInflicted) {
-    val player = this.players.single { it.username == event.by}
-    val filtered  = this.players.filter { it.username != event.by}
-    this.players = filtered + player.copy(lifePoints = player.lifePoints - event.damage)
+  private fun apply(event: BattleDamageInflicted) {
+    inflictDamage(event)
   }
+  
+  private fun apply(event: DirectDamageInflicted) {
+    inflictDamage(event)
+  }
+  
+  private fun apply(event: EffectDamageInflicted) {
+    inflictDamage(event)
+  }
+  
   
   private fun apply(event: DrawPhaseSet) {
     this.turn = this.turn.copy(state = Turn.State.DrawPhase)
@@ -157,5 +178,10 @@ class Match(private val id: UUID) {
     this.normalSummonPermitted -= 1
   }
   
+  private fun inflictDamage(event: DamageEvent) {
+    val player = this.players.single { it.username == event.by }
+    val filtered = this.players.filter { it.username != event.by }
+    this.players = filtered + player.copy(lifePoints = player.lifePoints - event.damage)
+  }
 }
 

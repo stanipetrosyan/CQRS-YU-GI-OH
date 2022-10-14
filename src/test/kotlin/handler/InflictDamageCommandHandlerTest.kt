@@ -25,7 +25,7 @@ internal class InflictDamageCommandHandlerTest  {
   }
   
   @Test
-  internal fun `should handle attack`() {
+  internal fun `should handle battle attack`() {
     val matchId = UUID.randomUUID()
     val username = "aPlayer"
     every { LocalDateTime.now() } returns now
@@ -35,10 +35,10 @@ internal class InflictDamageCommandHandlerTest  {
     ))
     every { matches.save(any())} returns Unit
     
-    InflictDamageCommandHandler(matches).handle(InflictDamage(matchId, username, 1000))
+    InflictDamageCommandHandler(matches).handle(InflictDamage(matchId, username, 1000, DamageType.Battle))
     
     verify { matches.save(match {
-      it.changes.contains(DamageInflicted(matchId, username, 1000, now))
+      it.changes.contains(BattleDamageInflicted(matchId, username, 1000, now))
     }) }
   }
   

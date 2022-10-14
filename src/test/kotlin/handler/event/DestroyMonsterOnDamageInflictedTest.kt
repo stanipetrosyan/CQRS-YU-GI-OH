@@ -12,6 +12,7 @@ import io.vertx.core.json.JsonObject
 import io.vertx.junit5.VertxExtension
 import io.vertx.junit5.VertxTestContext
 import org.awaitility.Awaitility
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -21,8 +22,9 @@ import port.EventBus
 import java.time.LocalDateTime
 import java.util.*
 
+
 @ExtendWith(VertxExtension::class, JsonExtension::class)
-internal class InflictDamageOnAttackDeclaredTest {
+internal class DestroyMonsterOnDamageInflictedTest {
   private lateinit var eventBus: EventBus
   private val commandBus: CommandBus = mockk()
   private val matches: Matches = mockk()
@@ -41,22 +43,24 @@ internal class InflictDamageOnAttackDeclaredTest {
     val by = "username"
     
     every { commandBus.send(any()) } returns CommandResult.OK
-    every { matches.load(matchId) } returns Match(matchId).hydrate(listOf(
-      MatchStarted(matchId, Player(by, 40, 8000), Player("anotherPlayer", 40, 8000), now),
-      MainPhaseOneSet(matchId, by, now),
-      MonsterNormalSummoned(matchId, monster, now),
-      MonsterNormalSummoned(matchId, anotherMonster, now),
-      BattlePhaseSet(matchId, by, now),
-      AttackDeclared(matchId, monster.id, anotherMonster.id, by, now)
-    ))
+    every { matches.load(matchId) } returns Match(matchId).hydrate(
+      listOf(
+        MatchStarted(matchId, Player(by, 40, 8000), Player("anotherPlayer", 40, 8000), now),
+        MainPhaseOneSet(matchId, by, now),
+        MonsterNormalSummoned(matchId, monster, now),
+        MonsterNormalSummoned(matchId, anotherMonster, now),
+        BattlePhaseSet(matchId, by, now),
+        AttackDeclared(matchId, monster.id, anotherMonster.id, by, now)
+      )
+    )
     
-    InflictDamageOnAttackDeclared(eventBus, commandBus, matches)
-  
-    val event = AttackDeclared(matchId, monster.id, anotherMonster.id, by, now)
-    eventBus.emit(AttackDeclared::class.java.simpleName, JsonObject.mapFrom(event))
+    DestroyMonsterOnDamageInflicted(eventBus, commandBus, matches)
+    
+    val event = BattleDamageInflicted(matchId, by, 2000, now)
+    eventBus.emit(BattleDamageInflicted::class.java.simpleName, JsonObject.mapFrom(event))
     
     Awaitility.await().untilAsserted {
-      verify { commandBus.send(InflictDamage(matchId, "anotherPlayer", 1000, DamageType.Battle)) }
+      verify { commandBus.send(DestroyMonster(matchId, "anotherPlayer", anotherMonster.id)) }
       test.completeNow()
     }
   }

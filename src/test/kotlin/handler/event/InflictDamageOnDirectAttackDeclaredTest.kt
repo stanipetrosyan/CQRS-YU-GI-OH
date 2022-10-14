@@ -54,7 +54,7 @@ internal class InflictDamageOnDirectAttackDeclaredTest {
     eventBus.emit(DirectAttackDeclared::class.java.simpleName, JsonObject.mapFrom(event))
     
     await().untilAsserted {
-      verify { commandBus.send(InflictDamage(matchId, "username", 2000)) }
+      verify { commandBus.send(InflictDamage(matchId, "username", 2000, DamageType.Direct)) }
       test.completeNow()
     }
   }

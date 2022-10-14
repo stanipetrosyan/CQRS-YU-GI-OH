@@ -1,6 +1,7 @@
 package handler.event
 
 import Matches
+import domain.DamageType
 import domain.DirectAttackDeclared
 import domain.InflictDamage
 import port.CommandBus
@@ -19,7 +20,7 @@ class InflictDamageOnDirectAttackDeclared(eventBus: EventBus, private val comman
     val match = matches.load(event.matchId)
   
     val damage = match.calcDamage(event.attackerId)
-    commandBus.send(InflictDamage(event.matchId, event.by, damage))
+    commandBus.send(InflictDamage(event.matchId, event.by, damage, DamageType.Direct))
   }
   
 }

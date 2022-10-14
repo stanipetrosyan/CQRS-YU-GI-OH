@@ -7,7 +7,16 @@ interface Event {
   val matchId: UUID
   val at: LocalDateTime
 }
-sealed interface MatchEvent : Event
+
+sealed interface MatchEvent : Event {}
+
+sealed interface PlayerEvent: MatchEvent {
+  val by: String
+}
+
+sealed interface DamageEvent : PlayerEvent {
+  val damage: Int
+}
 
 data class MatchStarted(
   override val matchId: UUID,
@@ -24,62 +33,77 @@ data class MonsterNormalSummoned(
 
 data class CardDrew(
   override val matchId: UUID,
-  val by: String,
+  override val by: String,
   override val at: LocalDateTime
-): MatchEvent
+): PlayerEvent
 
 data class DrawPhaseSet(
   override val matchId: UUID,
-  val by: String,
+  override val by: String,
   override val at: LocalDateTime
-): MatchEvent
+): PlayerEvent
+
 data class StandbyPhaseSet(
   override val matchId: UUID,
-  val by: String,
+  override val by: String,
   override val at: LocalDateTime
-): MatchEvent
+): PlayerEvent
 data class MainPhaseOneSet(
   override val matchId: UUID,
-  val by: String,
+  override val by: String,
   override val at: LocalDateTime
-): MatchEvent
+): PlayerEvent
 data class BattlePhaseSet(
   override val matchId: UUID,
-  val by: String,
+  override val by: String,
   override val at: LocalDateTime
-): MatchEvent
+): PlayerEvent
 data class MainPhaseTwoSet(
   override val matchId: UUID,
-  val by: String,
+  override val by: String,
   override val at: LocalDateTime
-): MatchEvent
+): PlayerEvent
 data class EndPhaseSet(
   override val matchId: UUID,
-  val by: String,
+  override val by: String,
   override val at: LocalDateTime
-): MatchEvent
+): PlayerEvent
 
 data class AttackDeclared(
   override val matchId: UUID,
   val attackerId: UUID,
   val defenderId: UUID,
-  val by: String,
+  override val by: String,
   override val at: LocalDateTime
-): MatchEvent
+): PlayerEvent
 
-data class DamageInflicted(
+data class BattleDamageInflicted(
   override val matchId: UUID,
-  val by: String,
-  val damage: Int,
+  override val by: String,
+  override val damage: Int,
   override val at: LocalDateTime
-): MatchEvent
+): DamageEvent
+
+data class DirectDamageInflicted(
+  override val matchId: UUID,
+  override val by: String,
+  override val damage: Int,
+  override val at: LocalDateTime
+): DamageEvent
+
+data class EffectDamageInflicted(
+  override val matchId: UUID,
+  override val by: String,
+  override val damage: Int,
+  override val at: LocalDateTime
+): DamageEvent
 
 data class DirectAttackDeclared(
   override val matchId: UUID,
   val attackerId: UUID,
-  val by: String,
+  override val by: String,
   override val at: LocalDateTime
-) : MatchEvent
+) : PlayerEvent
 
 
 

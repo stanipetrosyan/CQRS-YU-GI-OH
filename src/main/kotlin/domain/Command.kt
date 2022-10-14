@@ -74,7 +74,8 @@ data class DeclareDirectAttack(
 data class InflictDamage(
   override val matchId: UUID,
   override val by: String,
-  val damage: Int
+  val damage: Int,
+  val type: DamageType
 ) : MatchCommand
 
 data class DeclareAttack(
@@ -91,3 +92,6 @@ data class DestroyMonster(
   val monsterId: UUID
 ) : MatchCommand
 
+enum class DamageType {
+  Battle, Direct, Effect
+}
