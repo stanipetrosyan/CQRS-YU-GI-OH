@@ -27,9 +27,10 @@ data class MatchStarted(
 
 data class MonsterNormalSummoned(
   override val matchId: UUID,
+  override val by: String,
   val monster: Monster,
   override val at: LocalDateTime
-): MatchEvent
+): PlayerEvent
 
 data class CardDrew(
   override val matchId: UUID,

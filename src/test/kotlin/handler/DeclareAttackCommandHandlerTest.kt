@@ -77,7 +77,7 @@ internal class DeclareAttackCommandHandlerTest {
     every { matches.load(matchId) } returns Match(matchId).hydrate(listOf(
       MatchStarted(matchId, Player(username, 40, 8000), Player("anotherPlayer", 40, 8000), now),
       MainPhaseOneSet(matchId, username, now),
-      MonsterNormalSummoned(matchId, monster, now),
+      MonsterNormalSummoned(matchId, username, monster, now),
       BattlePhaseSet(matchId, username, now),
       AttackDeclared(matchId, monster.id, anotherMonster.id, username, now)
     ))

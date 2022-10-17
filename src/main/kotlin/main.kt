@@ -2,6 +2,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import domain.*
+import handler.event.DestroyMonsterOnDamageInflicted
 import handler.event.InflictDamageOnAttackDeclared
 import handler.event.InflictDamageOnDirectAttackDeclared
 import io.vertx.core.Vertx
@@ -31,6 +32,7 @@ fun main() {
   TurnViewHandler(eventBus)
   InflictDamageOnDirectAttackDeclared(myEventBus, commandBus, matches)
   InflictDamageOnAttackDeclared(myEventBus, commandBus, matches)
+  DestroyMonsterOnDamageInflicted(myEventBus, commandBus, matches)
   
   // set up
   val player = Player("home", 40, 8000)

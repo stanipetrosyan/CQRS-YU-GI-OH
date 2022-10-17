@@ -47,8 +47,8 @@ internal class DestroyMonsterOnDamageInflictedTest {
       listOf(
         MatchStarted(matchId, Player(by, 40, 8000), Player("anotherPlayer", 40, 8000), now),
         MainPhaseOneSet(matchId, by, now),
-        MonsterNormalSummoned(matchId, monster, now),
-        MonsterNormalSummoned(matchId, anotherMonster, now),
+        MonsterNormalSummoned(matchId, by, monster, now),
+        MonsterNormalSummoned(matchId, "anotherPlayer", anotherMonster, now),
         BattlePhaseSet(matchId, by, now),
         AttackDeclared(matchId, monster.id, anotherMonster.id, by, now)
       )

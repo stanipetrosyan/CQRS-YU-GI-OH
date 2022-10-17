@@ -12,7 +12,7 @@ class NormalSummonMonsterCommandHandler(private val matches: Matches): CommandHa
     val match = matches.load(command.matchId)
     
     if (match.isPermittedNormalSummon() && match.isPhase(Turn.State.MainPhase1)) {
-      matches.save(match.summonMonster(command.monster))
+      matches.save(match.summonMonster(command.by, command.monster))
     }
     return CommandResult.OK
   

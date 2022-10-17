@@ -36,7 +36,7 @@ internal class DestroyMonsterCommandHandlerTest {
       listOf(
         MatchStarted(matchId, Player(username, 40, 8000), Player(username, 40, 8000), now),
         MainPhaseOneSet(matchId, username, now),
-        MonsterNormalSummoned(matchId, monster, now)
+        MonsterNormalSummoned(matchId, username, monster, now)
       )
     )
     every { matches.save(any()) } returns Unit

@@ -34,7 +34,7 @@ internal class DeclareDirectAttackCommandHandlerTest {
     every { matches.load(matchId) } returns Match(matchId).hydrate(listOf(
       MatchStarted(matchId, Player(username, 40, 8000), Player("anotherPlayer", 40, 8000), now),
       MainPhaseOneSet(matchId, username, now),
-      MonsterNormalSummoned(matchId, monster, now),
+      MonsterNormalSummoned(matchId, username, monster, now),
       BattlePhaseSet(matchId, username, now)
     ))
     every { matches.save(any())} returns Unit
@@ -56,7 +56,7 @@ internal class DeclareDirectAttackCommandHandlerTest {
     every { matches.load(matchId) } returns Match(matchId).hydrate(listOf(
       MatchStarted(matchId, Player(username, 40, 8000), Player("anotherPlayer", 40, 8000), now),
       MainPhaseOneSet(matchId, username, now),
-      MonsterNormalSummoned(matchId, monster, now),
+      MonsterNormalSummoned(matchId, username, monster, now),
     ))
     
     DeclareDirectAttackCommandHandler(matches).handle(DeclareDirectAttack(matchId, username, "anotherPlayer", monster.id))
@@ -74,7 +74,7 @@ internal class DeclareDirectAttackCommandHandlerTest {
     every { matches.load(matchId) } returns Match(matchId).hydrate(listOf(
       MatchStarted(matchId, Player(username, 40, 8000), Player("anotherPlayer", 40, 8000), now),
       MainPhaseOneSet(matchId, username, now),
-      MonsterNormalSummoned(matchId, monster, now),
+      MonsterNormalSummoned(matchId, username, monster, now),
       BattlePhaseSet(matchId, username, now),
       DirectAttackDeclared(matchId, monster.id, username, now)
     ))

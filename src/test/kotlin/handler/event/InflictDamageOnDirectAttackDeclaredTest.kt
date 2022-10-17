@@ -43,7 +43,7 @@ internal class InflictDamageOnDirectAttackDeclaredTest {
     every { matches.load(matchId) } returns Match(matchId).hydrate(listOf(
       MatchStarted(matchId, Player(by, 40, 8000), Player("anotherPlayer", 40, 8000), now),
       MainPhaseOneSet(matchId, by, now),
-      MonsterNormalSummoned(matchId, monster, now),
+      MonsterNormalSummoned(matchId, by, monster, now),
       BattlePhaseSet(matchId, by, now),
       DirectAttackDeclared(matchId, monster.id, by, now)
     ))

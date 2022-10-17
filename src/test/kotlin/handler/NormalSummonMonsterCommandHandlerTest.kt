@@ -39,7 +39,7 @@ internal class NormalSummonMonsterCommandHandlerTest{
     NormalSummonMonsterCommandHandler(matches).handle(NormalSummonMonster(matchId, username, monster))
     
     verify { matches.save(match {
-      it.changes.contains(MonsterNormalSummoned(matchId, monster, now))
+      it.changes.contains(MonsterNormalSummoned(matchId, username, monster, now))
     }) }
   }
   
@@ -51,7 +51,7 @@ internal class NormalSummonMonsterCommandHandlerTest{
     every { LocalDateTime.now() } returns now
     every { matches.load(matchId) } returns Match(matchId).hydrate(listOf(
       MatchStarted(matchId, Player(username, 40, 8000), Player(username, 40, 8000), now),
-      MonsterNormalSummoned(matchId, monster, now)
+      MonsterNormalSummoned(matchId, username, monster, now)
     ))
     every { matches.save(any())} returns Unit
   

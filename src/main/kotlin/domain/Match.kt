@@ -6,7 +6,7 @@ import java.util.*
 class Match(private val id: UUID) {
   val changes = mutableListOf<MatchEvent>()
   private var players: List<Player> = emptyList()
-  private val monsters: MutableList<Monster> = mutableListOf()
+  private var monsters: MutableList<Monster> = mutableListOf()
   private var normalSummonPermitted: Int = 1
   private var monstersAttacked: MutableList<UUID> = mutableListOf()
   private var monsterToDestroy: UUID? = null
@@ -46,8 +46,8 @@ class Match(private val id: UUID) {
     return this
   }
   
-  fun summonMonster(monster: Monster): Match {
-    changes.add(MonsterNormalSummoned(this.id, monster, LocalDateTime.now()))
+  fun summonMonster(username: String, monster: Monster): Match {
+    changes.add(MonsterNormalSummoned(this.id, username, monster, LocalDateTime.now()))
     return this
   }
   
@@ -113,11 +113,15 @@ class Match(private val id: UUID) {
         is BattleDamageInflicted -> apply(event)
         is DirectDamageInflicted -> apply(event)
         is EffectDamageInflicted -> apply(event)
-        is MonsterDestroyed -> TODO()
+        is MonsterDestroyed -> apply(event)
       }
     }
     
     return this
+  }
+  
+  private fun apply(event: MonsterDestroyed) {
+    this.monsters.removeIf { it.id == event.monsterId }
   }
   
   private fun apply(event: DirectAttackDeclared) {

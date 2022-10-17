@@ -13,7 +13,6 @@ class FieldViewHandler(eventBus: EventBus) {
       consume(it.body().mapTo(MatchStarted::class.java))
     }
     
-    
     eventBus.consumer<JsonObject>(CardDrew::class.simpleName) {
       consume(it.body().mapTo(CardDrew::class.java))
     }
@@ -22,11 +21,19 @@ class FieldViewHandler(eventBus: EventBus) {
       consume(it.body().mapTo(MonsterNormalSummoned::class.java))
     }
     
+    eventBus.consumer<JsonObject>(MonsterDestroyed::class.simpleName) {
+      consume(it.body().mapTo(MonsterDestroyed::class.java))
+    }
+    
   }
-
+  
+  private fun consume(event: MonsterDestroyed) {
+    println("Monster Destroyed")
+  }
+  
   private fun consume(event: MatchStarted) {
     deckSize = event.player.deckSize
-    println("incontro iniziato con il player ${event.player.username}")
+    println("Player ${event.player.username} start the match")
   }
   
   private fun consume(event: CardDrew) {
@@ -35,7 +42,7 @@ class FieldViewHandler(eventBus: EventBus) {
   }
   
   private fun consume(event: MonsterNormalSummoned) {
-    println("ho evocato il mostro: ${event.monster.name}")
+    println("Player: ${event.by} summoned monster: ${event.monster.name}")
   }
   
 }
