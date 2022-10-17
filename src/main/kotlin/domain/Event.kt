@@ -105,6 +105,13 @@ data class DirectAttackDeclared(
   override val at: LocalDateTime
 ) : PlayerEvent
 
+data class MonsterDestroyed(
+  override val matchId: UUID,
+  override val by: String,
+  val monsterId: UUID,
+  override val at: LocalDateTime
+) : PlayerEvent
+
 
 
 

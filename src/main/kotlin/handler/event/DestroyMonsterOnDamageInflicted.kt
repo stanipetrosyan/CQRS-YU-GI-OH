@@ -2,6 +2,7 @@ package handler.event
 
 import Matches
 import domain.BattleDamageInflicted
+import domain.DestroyMonster
 import port.CommandBus
 import port.EventBus
 import port.EventHandler
@@ -17,6 +18,9 @@ class DestroyMonsterOnDamageInflicted(eventBus: EventBus, private val commandBus
   override fun consume(event: BattleDamageInflicted) {
     val match = matches.load(event.matchId)
     
+    val monsterToDestroy = match.monsterToDestroy()
+    if (monsterToDestroy != null)
+      commandBus.send(DestroyMonster(event.matchId, event.by, monsterToDestroy))
   }
   
 }

@@ -15,6 +15,10 @@ class LifePointsViewHandler(eventBus: EventBus) {
     eventBus.consumer<JsonObject>(BattleDamageInflicted::class.simpleName) {
       consume(it.body().mapTo(BattleDamageInflicted::class.java))
     }
+    
+    eventBus.consumer<JsonObject>(DirectDamageInflicted::class.simpleName) {
+      consume(it.body().mapTo(DirectDamageInflicted::class.java))
+    }
   }
   
   private fun consume(event: MatchStarted) {
@@ -25,7 +29,12 @@ class LifePointsViewHandler(eventBus: EventBus) {
   
   private fun consume(event: BattleDamageInflicted) {
     players[event.by] = players[event.by]!! - event.damage
-    println("Il giocatore ${event.by} ha subito ${event.damage} e i suoi life point sono ${players[event.by]}")
+    println("Il giocatore ${event.by} ha subito ${event.damage} in battaglia e i suoi life point sono ${players[event.by]}")
+  }
+  
+  private fun consume(event: DirectDamageInflicted) {
+    players[event.by] = players[event.by]!! - event.damage
+    println("Il giocatore ${event.by} ha subito ${event.damage} come attacco diretto e i suoi life point sono ${players[event.by]}")
   }
  
 }

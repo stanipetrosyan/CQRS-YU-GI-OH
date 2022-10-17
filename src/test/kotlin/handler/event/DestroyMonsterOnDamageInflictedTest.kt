@@ -35,7 +35,7 @@ internal class DestroyMonsterOnDamageInflictedTest {
   }
   
   @Test
-  internal fun `should emit inflict damage command`(test: VertxTestContext) {
+  internal fun `should emit destroy monster command`(test: VertxTestContext) {
     val matchId = UUID.randomUUID()
     val monster = Monster(UUID.randomUUID(), "nName", 7, 3000, 2000, MonsterType.Normal, "aDescription")
     val anotherMonster = Monster(UUID.randomUUID(), "nName", 7, 2000, 2000, MonsterType.Normal, "aDescription")
@@ -60,7 +60,7 @@ internal class DestroyMonsterOnDamageInflictedTest {
     eventBus.emit(BattleDamageInflicted::class.java.simpleName, JsonObject.mapFrom(event))
     
     Awaitility.await().untilAsserted {
-      verify { commandBus.send(DestroyMonster(matchId, "anotherPlayer", anotherMonster.id)) }
+      verify { commandBus.send(DestroyMonster(matchId, by, anotherMonster.id)) }
       test.completeNow()
     }
   }

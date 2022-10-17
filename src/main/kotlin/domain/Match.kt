@@ -3,18 +3,13 @@ package domain
 import java.time.LocalDateTime
 import java.util.*
 
-data class Battle(
-  val attacker: UUID,
-  val defender: UUID
-)
-
 class Match(private val id: UUID) {
   val changes = mutableListOf<MatchEvent>()
   private var players: List<Player> = emptyList()
   private val monsters: MutableList<Monster> = mutableListOf()
   private var normalSummonPermitted: Int = 1
   private var monstersAttacked: MutableList<UUID> = mutableListOf()
-  private var battle: Battle? = null
+  private var monsterToDestroy: UUID? = null
   
   private var turn: Turn = Turn(1, Turn.State.DrawPhase)
   
@@ -26,7 +21,9 @@ class Match(private val id: UUID) {
     return turn.state == state
   }
   
-  fun isBattle(): Boolean = battle != null
+  fun monsterToDestroy(): UUID? {
+    return this.monsterToDestroy
+  }
   
   fun changePhaseIsPermitted(phase: Turn.State): Boolean {
     return phase > this.turn.state || (this.turn.state == Turn.State.EndPhase && phase == Turn.State.DrawPhase)
@@ -94,6 +91,11 @@ class Match(private val id: UUID) {
     return this
   }
   
+  fun destroyMonster(username: String, monsterId: UUID): Match {
+    changes.add(MonsterDestroyed(this.id, username, monsterId, LocalDateTime.now()))
+    return this
+  }
+  
   fun hydrate(events: List<MatchEvent>): Match {
     events.forEach { event ->
       when (event) {
@@ -111,6 +113,7 @@ class Match(private val id: UUID) {
         is BattleDamageInflicted -> apply(event)
         is DirectDamageInflicted -> apply(event)
         is EffectDamageInflicted -> apply(event)
+        is MonsterDestroyed -> TODO()
       }
     }
     
@@ -123,6 +126,7 @@ class Match(private val id: UUID) {
   
   private fun apply(event: AttackDeclared) {
     this.monstersAttacked.add(event.attackerId)
+    this.monsterToDestroy = event.defenderId
   }
   
   private fun apply(event: BattleDamageInflicted) {
@@ -183,5 +187,8 @@ class Match(private val id: UUID) {
     val filtered = this.players.filter { it.username != event.by }
     this.players = filtered + player.copy(lifePoints = player.lifePoints - event.damage)
   }
+
+  
+  
 }
 

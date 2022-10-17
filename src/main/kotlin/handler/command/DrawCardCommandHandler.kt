@@ -11,7 +11,6 @@ class DrawCardCommandHandler(private val matches: Matches): CommandHandler<DrawC
     
     matches.save(match.drawCard(command.by))
     return CommandResult.OK
-  
   }
   
 }
