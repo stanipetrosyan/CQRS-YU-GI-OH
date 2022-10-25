@@ -25,6 +25,14 @@ class FieldViewHandler(eventBus: EventBus) {
       consume(it.body().mapTo(MonsterDestroyed::class.java))
     }
     
+    eventBus.consumer<JsonObject>(MatchEnded::class.simpleName) {
+      consume(it.body().mapTo(MatchEnded::class.java))
+    }
+    
+  }
+  
+  private fun consume(event: MatchEnded) {
+    println("Player ${event.winner} won")
   }
   
   private fun consume(event: MonsterDestroyed) {
@@ -38,7 +46,7 @@ class FieldViewHandler(eventBus: EventBus) {
   
   private fun consume(event: CardDrew) {
     deckSize -= 1
-    println("player ${event.by} ha pescato una carta rimangono ${deckSize} carte")
+    println("player ${event.by} has drawn a card. Cards remaining: $deckSize")
   }
   
   private fun consume(event: MonsterNormalSummoned) {

@@ -92,6 +92,13 @@ data class DestroyMonster(
   val monsterId: UUID
 ) : MatchCommand
 
+data class EndMatch(
+  override val matchId: UUID,
+  override val by: String,
+): MatchCommand
+
+
+
 enum class DamageType {
   Battle, Direct, Effect
 }

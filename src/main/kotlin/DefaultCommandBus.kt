@@ -20,6 +20,7 @@ class DefaultCommandBus(private val matches: Matches): CommandBus {
       is DeclareAttack -> DeclareAttackCommandHandler(matches).handle(command)
       is InflictDamage -> InflictDamageCommandHandler(matches).handle(command)
       is DestroyMonster -> DestroyMonsterCommandHandler(matches).handle(command)
+      is EndMatch -> EndMatchCommandHandler(matches).handle(command)
     }
   }
   

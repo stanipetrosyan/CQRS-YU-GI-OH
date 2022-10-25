@@ -3,6 +3,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import domain.*
 import handler.event.DestroyMonsterOnDamageInflicted
+import handler.event.EndMatchOnDamageInflicted
 import handler.event.InflictDamageOnAttackDeclared
 import handler.event.InflictDamageOnDirectAttackDeclared
 import io.vertx.core.Vertx
@@ -33,6 +34,7 @@ fun main() {
   InflictDamageOnDirectAttackDeclared(myEventBus, commandBus, matches)
   InflictDamageOnAttackDeclared(myEventBus, commandBus, matches)
   DestroyMonsterOnDamageInflicted(myEventBus, commandBus, matches)
+  EndMatchOnDamageInflicted(myEventBus, commandBus, matches)
   
   // set up
   val player = Player("home", 40, 8000)
@@ -41,9 +43,9 @@ fun main() {
   val monster = Monster(teschioId, "Teschio Evocato", 7, 2500, 1000, MonsterType.Normal, "Il teschio evocato è un mostro potente")
   val dragoId = UUID.randomUUID()
   val anotherMonster = Monster(dragoId, "Drago Bianco Occhi Blu", 8, 3000, 2500, MonsterType.Normal, "Drago Bianco Occhi Blu è un mostro potente")
+  val finalMonsterId = UUID.randomUUID()
+  val finalMonster = Monster(finalMonsterId, "Monster", 8, 8500, 2500, MonsterType.Normal, "Monster for finish game")
   
-  println(teschioId)
-  println(dragoId)
   // start the match
   val matchId = UUID.randomUUID()
   commandBus.send(StartMatch(matchId, player.username, player, opponent))
@@ -85,4 +87,20 @@ fun main() {
   commandBus.send(SetEndPhase(matchId, player.username))
   
   // turn 3
+  commandBus.send(SetDrawPhase(matchId, player.username))
+  Thread.sleep(1000)
+  commandBus.send(DrawCard(matchId, player.username))
+  Thread.sleep(1000)
+  commandBus.send(SetStandByPhase(matchId, player.username))
+  Thread.sleep(1000)
+  commandBus.send(SetMainPhaseOne(matchId, player.username))
+  Thread.sleep(1000)
+  commandBus.send(NormalSummonMonster(matchId, player.username, finalMonster))
+  Thread.sleep(1000)
+  commandBus.send(SetBattlePhase(matchId, player.username))
+  Thread.sleep(1000)
+  commandBus.send(DeclareAttack(matchId, player.username, opponent.username, finalMonsterId, dragoId))
+  Thread.sleep(1000)
+  
+  
 }

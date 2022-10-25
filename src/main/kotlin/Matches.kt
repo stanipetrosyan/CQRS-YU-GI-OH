@@ -18,7 +18,7 @@ class EventSourcedMatches(private val eventStore: EventStore, private val eventB
   override fun save(match: Match) {
     match.changes.forEach { event ->
       eventStore.add(event)
-      println("[${event.javaClass.simpleName}] pubblicato")
+      println("[${event.javaClass.simpleName}] Event emitted")
       eventBus.publish(event.javaClass.simpleName, JsonObject.mapFrom(event))
     }
   }

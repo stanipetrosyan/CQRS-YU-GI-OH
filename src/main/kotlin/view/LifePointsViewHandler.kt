@@ -24,17 +24,17 @@ class LifePointsViewHandler(eventBus: EventBus) {
   private fun consume(event: MatchStarted) {
     players[event.player.username] = event.player.lifePoints
     players[event.opponent.username] = event.opponent.lifePoints
-    println("Giocatori con 8000 life points ciascuno")
+    println("Players start both with ${event.player.lifePoints} life points")
   }
   
   private fun consume(event: BattleDamageInflicted) {
     players[event.by] = players[event.by]!! - event.damage
-    println("Il giocatore ${event.by} ha subito ${event.damage} in battaglia e i suoi life point sono ${players[event.by]}")
+    println("Player ${event.by} suffered ${event.damage} in battle. New life points: ${players[event.by]}")
   }
   
   private fun consume(event: DirectDamageInflicted) {
     players[event.by] = players[event.by]!! - event.damage
-    println("Il giocatore ${event.by} ha subito ${event.damage} come attacco diretto e i suoi life point sono ${players[event.by]}")
+    println("Player ${event.by} suffered ${event.damage} directly. New life points: ${players[event.by]}")
   }
  
 }

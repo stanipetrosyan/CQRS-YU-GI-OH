@@ -113,6 +113,11 @@ data class MonsterDestroyed(
   override val at: LocalDateTime
 ) : PlayerEvent
 
+data class MatchEnded(
+  override val matchId: UUID,
+  val winner: String,
+  override val at: LocalDateTime
+): MatchEvent
 
 
 

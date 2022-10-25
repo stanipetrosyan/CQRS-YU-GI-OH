@@ -3,6 +3,10 @@ package domain
 import java.time.LocalDateTime
 import java.util.*
 
+enum class MatchState {
+  STARTED, CLOSED
+}
+
 class Match(private val id: UUID) {
   val changes = mutableListOf<MatchEvent>()
   private var players: List<Player> = emptyList()
@@ -10,6 +14,7 @@ class Match(private val id: UUID) {
   private var normalSummonPermitted: Int = 1
   private var monstersAttacked: MutableList<UUID> = mutableListOf()
   private var monsterToDestroy: UUID? = null
+  private var state: MatchState = MatchState.STARTED
   
   private var turn: Turn = Turn(1, Turn.State.DrawPhase)
   
@@ -39,6 +44,10 @@ class Match(private val id: UUID) {
   
   fun findOpponent(by: String): String {
     return players.find { it.username != by }!!.username
+  }
+  
+  fun playerLost(username: String, damage: Int): Boolean {
+    return (players.find { it.username == username }!!.lifePoints - damage <= 0)
   }
   
   fun start(player: Player, opponent: Player): Match {
@@ -96,6 +105,12 @@ class Match(private val id: UUID) {
     return this
   }
   
+  fun end(username: String): Match {
+    changes.add(MatchEnded(this.id, username, LocalDateTime.now()))
+    return this
+  }
+  
+  
   fun hydrate(events: List<MatchEvent>): Match {
     events.forEach { event ->
       when (event) {
@@ -114,10 +129,15 @@ class Match(private val id: UUID) {
         is DirectDamageInflicted -> apply(event)
         is EffectDamageInflicted -> apply(event)
         is MonsterDestroyed -> apply(event)
+        is MatchEnded -> apply(event)
       }
     }
     
     return this
+  }
+  
+  private fun apply(event: MatchEnded) {
+    this.state = MatchState.CLOSED
   }
   
   private fun apply(event: MonsterDestroyed) {
@@ -191,8 +211,6 @@ class Match(private val id: UUID) {
     val filtered = this.players.filter { it.username != event.by }
     this.players = filtered + player.copy(lifePoints = player.lifePoints - event.damage)
   }
-
-  
   
 }
 

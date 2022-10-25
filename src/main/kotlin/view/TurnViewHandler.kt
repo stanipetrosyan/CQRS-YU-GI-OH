@@ -32,32 +32,31 @@ class TurnViewHandler(eventBus: EventBus) {
   private fun consume(event: DrawPhaseSet) {
     turn = turn.copy(state = Turn.State.DrawPhase)
     
-    println("player ${event.by} è entrato in ${turn.state}")
+    println("player ${event.by} set ${turn.state}")
   }
   private fun consume(event: StandbyPhaseSet) {
     turn = turn.copy(state = Turn.State.StandByPhase)
   
-    println("player ${event.by} è entrato in ${turn.state}")
+    println("player ${event.by} set ${turn.state}")
   }
   private fun consume(event: MainPhaseOneSet) {
     turn = turn.copy(state = Turn.State.MainPhase1)
     
-    println("player ${event.by} è entrato in ${turn.state}")
+    println("player ${event.by} set ${turn.state}")
   }
   private fun consume(event: BattlePhaseSet) {
     turn = turn.copy(state = Turn.State.BattlePhase)
     
-    println("player ${event.by} è entrato in ${turn.state}")
+    println("player ${event.by} set ${turn.state}")
   }
   private fun consume(event: MainPhaseTwoSet) {
     turn = turn.copy(state = Turn.State.MainPhase2)
     
-    println("player ${event.by} è entrato in ${turn.state}")
+    println("player ${event.by} set ${turn.state}")
   }
   private fun consume(event: EndPhaseSet) {
     turn = turn.copy(state = Turn.State.EndPhase)
     
-    
-    println("player ${event.by} è entrato in ${turn.state}")
+    println("player ${event.by} set ${turn.state}")
   }
 }
