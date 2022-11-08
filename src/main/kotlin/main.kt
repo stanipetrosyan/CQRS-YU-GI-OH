@@ -39,10 +39,10 @@ fun main() {
   // set up
   val player = Player("home", 40, 8000)
   val opponent = Player("opponent", 40, 8000)
-  val teschioId = UUID.randomUUID()
-  val monster = Monster(teschioId, "Summoned Skull", 7, 2500, 1000, MonsterType.Normal, "A fiend with dara powers...")
-  val dragoId = UUID.randomUUID()
-  val anotherMonster = Monster(dragoId, "Blue-Eyes White Dragon", 8, 3000, 2500, MonsterType.Normal, "This legendary dragon is a powerful engine of destruction.")
+  val skullId = UUID.randomUUID()
+  val monster = Monster(skullId, "Summoned Skull", 7, 2500, 1000, MonsterType.Normal, "A fiend with dara powers...")
+  val dragonId = UUID.randomUUID()
+  val anotherMonster = Monster(dragonId, "Blue-Eyes White Dragon", 8, 3000, 2500, MonsterType.Normal, "This legendary dragon is a powerful engine of destruction.")
   val finalMonsterId = UUID.randomUUID()
   val finalMonster = Monster(finalMonsterId, "Monster", 8, 8500, 2500, MonsterType.Normal, "Monster for finish game")
   
@@ -63,7 +63,7 @@ fun main() {
   Thread.sleep(1000)
   commandBus.send(SetBattlePhase(matchId, player.username))
   Thread.sleep(1000)
-  commandBus.send(DeclareDirectAttack(matchId, player.username, opponent.username, teschioId))
+  commandBus.send(DeclareDirectAttack(matchId, player.username, opponent.username, skullId))
   Thread.sleep(1000)
   
   commandBus.send(SetEndPhase(matchId, player.username))
@@ -99,6 +99,6 @@ fun main() {
   Thread.sleep(1000)
   commandBus.send(SetBattlePhase(matchId, player.username))
   Thread.sleep(1000)
-  commandBus.send(DeclareAttack(matchId, player.username, opponent.username, finalMonsterId, dragoId))
+  commandBus.send(DeclareAttack(matchId, player.username, opponent.username, finalMonsterId, dragonId))
   Thread.sleep(1000)
 }

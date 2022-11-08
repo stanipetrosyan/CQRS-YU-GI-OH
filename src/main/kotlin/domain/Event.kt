@@ -32,6 +32,13 @@ data class MonsterNormalSummoned(
   override val at: LocalDateTime
 ): PlayerEvent
 
+data class MonsterSet(
+  override val matchId: UUID,
+  override val by: String,
+  val monster: Monster,
+  override val at: LocalDateTime
+): PlayerEvent
+
 data class CardDrew(
   override val matchId: UUID,
   override val by: String,

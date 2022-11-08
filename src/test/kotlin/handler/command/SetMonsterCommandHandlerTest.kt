@@ -1,16 +1,16 @@
-package handler
+package handler.command
 
 import Matches
 import domain.*
-import handler.command.NormalSummonMonsterCommandHandler
 import io.mockk.*
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.util.*
 
-internal class NormalSummonMonsterCommandHandlerTest{
+internal class SetMonsterCommandHandlerTest {
   private val matches: Matches = mockk()
   private val now = LocalDateTime.now()
   
@@ -25,7 +25,7 @@ internal class NormalSummonMonsterCommandHandlerTest{
   }
   
   @Test
-  internal fun `should handle normal summon command`() {
+  internal fun `should handle set monster command`() {
     val matchId = UUID.randomUUID()
     val username = "aPlayer"
     every { LocalDateTime.now() } returns now
@@ -34,17 +34,17 @@ internal class NormalSummonMonsterCommandHandlerTest{
       MainPhaseOneSet(matchId, username, now)
     ))
     every { matches.save(any())} returns Unit
-  
+    
     val monster = Monster(UUID.randomUUID(), "aMonster", 4, 1000, 1000, MonsterType.Normal, "aDescription")
-    NormalSummonMonsterCommandHandler(matches).handle(NormalSummonMonster(matchId, username, monster))
+    SetMonsterCommandHandler(matches).handle(SetMonster(matchId, username, monster))
     
     verify { matches.save(match {
-      it.changes.contains(MonsterNormalSummoned(matchId, username, monster, now))
+      it.changes.contains(MonsterSet(matchId, username, monster, now))
     }) }
   }
   
   @Test
-  internal fun `should not permit handle summon monster normal twice`() {
+  internal fun `should not permit handle summon monster twice`() {
     val matchId = UUID.randomUUID()
     val username = "aPlayer"
     val monster = Monster(UUID.randomUUID(), "aMonster", 4, 1000, 1000, MonsterType.Normal, "aDescription")
@@ -54,8 +54,8 @@ internal class NormalSummonMonsterCommandHandlerTest{
       MonsterNormalSummoned(matchId, username, monster, now)
     ))
     every { matches.save(any())} returns Unit
-  
-    NormalSummonMonsterCommandHandler(matches).handle(NormalSummonMonster(matchId, username, monster))
+    
+    SetMonsterCommandHandler(matches).handle(SetMonster(matchId, username, monster))
     
     verify(exactly = 0) { matches.save(any())}
   }
@@ -70,8 +70,8 @@ internal class NormalSummonMonsterCommandHandlerTest{
       MatchStarted(matchId, Player(username, 40, 8000), Player(username, 40, 8000), now),
     ))
     every { matches.save(any())} returns Unit
-  
-    NormalSummonMonsterCommandHandler(matches).handle(NormalSummonMonster(matchId, username, monster))
+    
+    SetMonsterCommandHandler(matches).handle(SetMonster(matchId, username, monster))
     
     verify(exactly = 0) { matches.save(any())}
   }

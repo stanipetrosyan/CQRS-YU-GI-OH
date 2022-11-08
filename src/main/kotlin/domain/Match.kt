@@ -60,6 +60,12 @@ class Match(private val id: UUID) {
     return this
   }
   
+  fun setMonster(username: String, monster: Monster): Match {
+    changes.add(MonsterSet(this.id, username, monster, LocalDateTime.now()))
+    return this
+  }
+  
+  
   fun drawCard(username: String): Match {
     changes.add(CardDrew(this.id, username, LocalDateTime.now()))
     return this
@@ -117,6 +123,7 @@ class Match(private val id: UUID) {
         is MatchStarted -> apply(event)
         is CardDrew -> apply(event)
         is MonsterNormalSummoned -> apply(event)
+        is MonsterSet -> TODO()
         is DrawPhaseSet -> apply(event)
         is StandbyPhaseSet -> apply(event)
         is MainPhaseOneSet -> apply(event)
@@ -211,6 +218,5 @@ class Match(private val id: UUID) {
     val filtered = this.players.filter { it.username != event.by }
     this.players = filtered + player.copy(lifePoints = player.lifePoints - event.damage)
   }
-  
 }
 

@@ -58,7 +58,7 @@ data class NormalSummonMonster(
   val monster: Monster,
 ) : MatchCommand
 
-data class SetSummonMonster(
+data class SetMonster(
   override val matchId: UUID,
   override val by: String,
   val monster: Monster,
