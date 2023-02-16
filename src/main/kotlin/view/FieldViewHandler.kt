@@ -6,7 +6,7 @@ import io.vertx.core.json.JsonObject
 
 class FieldViewHandler(eventBus: EventBus) {
   
-  private var deckSize: Int = 0
+  private var decksCount: MutableMap<String, Int> = mutableMapOf()
   
   init {
     eventBus.consumer<JsonObject>(MatchStarted::class.simpleName) {
@@ -40,13 +40,16 @@ class FieldViewHandler(eventBus: EventBus) {
   }
   
   private fun consume(event: MatchStarted) {
-    deckSize = event.player.deckSize
+    decksCount[event.player.username] = event.player.deckSize
+    decksCount[event.opponent.username] = event.opponent.deckSize
+    
     println("Player ${event.player.username} start the match")
+    println("Player ${event.opponent.username} start the match")
   }
   
   private fun consume(event: CardDrew) {
-    deckSize -= 1
-    println("player ${event.by} has drawn a card. Cards remaining: $deckSize")
+    decksCount[event.by] = decksCount[event.by]!! - 1
+    println("player ${event.by} has drawn a card. Cards remaining: ${decksCount[event.by]}")
   }
   
   private fun consume(event: MonsterNormalSummoned) {
