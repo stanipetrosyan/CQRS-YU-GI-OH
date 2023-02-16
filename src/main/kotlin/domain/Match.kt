@@ -65,6 +65,10 @@ class Match(private val id: UUID) {
     return this
   }
   
+  fun activeSpell(username: String, spell: Spell): Match {
+    changes.add(SpellActivated(this.id, username, spell, LocalDateTime.now()))
+    return this
+  }
   
   fun drawCard(username: String): Match {
     changes.add(CardDrew(this.id, username, LocalDateTime.now()))

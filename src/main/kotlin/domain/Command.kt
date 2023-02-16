@@ -64,6 +64,12 @@ data class SetMonster(
   val monster: Monster,
 ) : MatchCommand
 
+data class ActiveSpell(
+  override val matchId: UUID,
+  override val by: String,
+  val spell: Spell
+): MatchCommand
+
 data class DeclareDirectAttack(
   override val matchId: UUID,
   override val by: String,

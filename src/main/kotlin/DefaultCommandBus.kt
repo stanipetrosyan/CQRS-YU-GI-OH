@@ -10,6 +10,7 @@ class DefaultCommandBus(private val matches: Matches): CommandBus {
       is DrawCard -> DrawCardCommandHandler(matches).handle(command)
       is NormalSummonMonster -> NormalSummonMonsterCommandHandler(matches).handle(command)
       is SetMonster -> SetMonsterCommandHandler(matches).handle(command)
+      is ActiveSpell -> ActiveSpellCommandHandler(matches).handle(command)
       is DeclareDirectAttack -> DeclareDirectAttackCommandHandler(matches).handle(command)
       is SetDrawPhase -> SetDrawPhaseCommandHandler(matches).handle(command)
       is SetStandByPhase -> SetStandByPhaseCommandHandler(matches).handle(command)

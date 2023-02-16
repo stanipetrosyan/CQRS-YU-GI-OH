@@ -120,6 +120,13 @@ data class MonsterDestroyed(
   override val at: LocalDateTime
 ) : PlayerEvent
 
+data class SpellActivated(
+  override val matchId: UUID,
+  override val by: String,
+  val spell: Spell,
+  override val at: LocalDateTime
+): PlayerEvent
+
 data class MatchEnded(
   override val matchId: UUID,
   val winner: String,
