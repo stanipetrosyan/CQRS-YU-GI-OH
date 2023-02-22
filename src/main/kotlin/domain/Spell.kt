@@ -1,5 +1,7 @@
 package domain
 
+import java.util.UUID
+
 data class Spell(
   val name: String,
   val type: Type,
@@ -18,4 +20,7 @@ data class Spell(
 sealed interface EffectType
 data class DrawCards(
   val value: Int
+): EffectType
+data class DestroyCard(
+  val cardId: UUID
 ): EffectType

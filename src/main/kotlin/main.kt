@@ -43,7 +43,8 @@ fun main() {
   val anotherMonster = Monster(dragonId, "Blue-Eyes White Dragon", 8, 3000, 2500, MonsterType.Normal, "This legendary dragon is a powerful engine of destruction.")
   val finalMonsterId = UUID.randomUUID()
   val finalMonster = Monster(finalMonsterId, "Monster", 8, 8500, 2500, MonsterType.Normal, "Monster for finish game")
-  val spell = Spell("Pot Of Greed", Spell.Type.Normal, "Draw 2 cards from your deck", effect = Spell.Effect(DrawCards(2)))
+  val potSpell = Spell("Pot Of Greed", Spell.Type.Normal, "Draw 2 cards from your deck", effect = Spell.Effect(DrawCards(2)))
+  val tributeSpell = Spell("Tribute To The Doomed", Spell.Type.Normal, "Discard 1 card. Destroy 1 monster on the field", Spell.Effect(DestroyCard(skullId)))
   
   // start the match
   val matchId = UUID.randomUUID()
@@ -58,7 +59,7 @@ fun main() {
   Thread.sleep(1000)
   commandBus.send(SetMainPhaseOne(matchId, player.username))
   Thread.sleep(1000)
-  commandBus.send(ActiveSpell(matchId, player.username, spell))
+  commandBus.send(ActiveSpell(matchId, player.username, potSpell))
   Thread.sleep(1000)
   commandBus.send(NormalSummonMonster(matchId, player.username, monster))
   Thread.sleep(1000)
@@ -96,10 +97,12 @@ fun main() {
   Thread.sleep(1000)
   commandBus.send(SetMainPhaseOne(matchId, player.username))
   Thread.sleep(1000)
+  commandBus.send(ActiveSpell(matchId, player.username, tributeSpell))
+  Thread.sleep(1000)
   commandBus.send(NormalSummonMonster(matchId, player.username, finalMonster))
   Thread.sleep(1000)
   commandBus.send(SetBattlePhase(matchId, player.username))
   Thread.sleep(1000)
-  commandBus.send(DeclareAttack(matchId, player.username, opponent.username, finalMonsterId, dragonId))
+  commandBus.send(DeclareDirectAttack(matchId, player.username, opponent.username, finalMonsterId))
   Thread.sleep(1000)
 }

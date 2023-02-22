@@ -19,6 +19,10 @@ class ApplyEffectOnSpellActivated(eventBus: EventBus, private val commandBus: Co
         commandBus.send(DrawCard(event.matchId, event.by))
         commandBus.send(DrawCard(event.matchId, event.by))
       }
+  
+      is DestroyCard -> {
+        commandBus.send(DestroyMonster(event.matchId, event.by, event.spell.effect.type.cardId))
+      }
     }
   }
   
