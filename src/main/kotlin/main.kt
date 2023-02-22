@@ -2,10 +2,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import domain.*
-import handler.event.DestroyMonsterOnDamageInflicted
-import handler.event.EndMatchOnDamageInflicted
-import handler.event.InflictDamageOnAttackDeclared
-import handler.event.InflictDamageOnDirectAttackDeclared
+import handler.event.*
 import io.vertx.core.Vertx
 import io.vertx.core.json.jackson.DatabindCodec
 import view.FieldViewHandler
@@ -31,6 +28,7 @@ fun main() {
   FieldViewHandler(eventBus)
   LifePointsViewHandler(eventBus)
   TurnViewHandler(eventBus)
+  ApplyEffectOnSpellActivated(myEventBus, commandBus)
   InflictDamageOnDirectAttackDeclared(myEventBus, commandBus, matches)
   InflictDamageOnAttackDeclared(myEventBus, commandBus, matches)
   DestroyMonsterOnDamageInflicted(myEventBus, commandBus, matches)
@@ -45,7 +43,7 @@ fun main() {
   val anotherMonster = Monster(dragonId, "Blue-Eyes White Dragon", 8, 3000, 2500, MonsterType.Normal, "This legendary dragon is a powerful engine of destruction.")
   val finalMonsterId = UUID.randomUUID()
   val finalMonster = Monster(finalMonsterId, "Monster", 8, 8500, 2500, MonsterType.Normal, "Monster for finish game")
-  val spell = Spell("Pot Of Greed", Spell.Type.Normal, "Draw 2 cards from your deck")
+  val spell = Spell("Pot Of Greed", Spell.Type.Normal, "Draw 2 cards from your deck", effect = Spell.Effect(DrawCards(2)))
   
   // start the match
   val matchId = UUID.randomUUID()
