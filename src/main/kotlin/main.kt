@@ -43,8 +43,8 @@ fun main() {
   val anotherMonster = Monster(dragonId, "Blue-Eyes White Dragon", 8, 3000, 2500, MonsterType.Normal, "This legendary dragon is a powerful engine of destruction.")
   val finalMonsterId = UUID.randomUUID()
   val finalMonster = Monster(finalMonsterId, "Monster", 8, 8500, 2500, MonsterType.Normal, "Monster for finish game")
-  val potSpell = Spell("Pot Of Greed", Spell.Type.Normal, "Draw 2 cards from your deck", effect = Spell.Effect(DrawCards(2)))
-  val tributeSpell = Spell("Tribute To The Doomed", Spell.Type.Normal, "Discard 1 card. Destroy 1 monster on the field", Spell.Effect(DestroyCard(skullId)))
+  val potSpell = Spell("Pot Of Greed", Spell.Type.Normal, "Draw 2 cards from your deck", listOf(DrawCards(2)))
+  val tributeSpell = Spell("Tribute To The Doomed", Spell.Type.Normal, "Discard 1 card. Destroy 1 monster on the field", listOf(DiscardCards(1), DestroyCard(skullId)))
   
   // start the match
   val matchId = UUID.randomUUID()

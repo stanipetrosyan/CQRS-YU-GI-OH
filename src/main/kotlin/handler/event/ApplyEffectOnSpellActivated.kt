@@ -14,14 +14,14 @@ class ApplyEffectOnSpellActivated(eventBus: EventBus, private val commandBus: Co
   }
   
   override fun consume(event: SpellActivated) {
-    when (event.spell.effect.type) {
+    when (event.spell.effect) {
       is DrawCards -> {
         commandBus.send(DrawCard(event.matchId, event.by))
         commandBus.send(DrawCard(event.matchId, event.by))
       }
   
       is DestroyCard -> {
-        commandBus.send(DestroyMonster(event.matchId, event.by, event.spell.effect.type.cardId))
+        commandBus.send(DestroyMonster(event.matchId, event.by, event.spell.effect.cardId))
       }
     }
   }

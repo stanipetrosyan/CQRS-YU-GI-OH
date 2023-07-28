@@ -36,7 +36,7 @@ class ActiveSpellCommandHandlerTest {
     ))
     every { matches.save(any())} returns Unit
   
-    val spell = Spell("aSpell", Spell.Type.Normal, "aText", Spell.Effect(DrawCards(2)))
+    val spell = Spell("aSpell", Spell.Type.Normal, "aText", DrawCards(2))
     ActiveSpellCommandHandler(matches).handle(ActiveSpell(matchId, username, spell))
   
     verify { matches.save(match {

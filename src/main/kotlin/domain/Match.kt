@@ -141,6 +141,7 @@ class Match(private val id: UUID) {
         is EffectDamageInflicted -> apply(event)
         is MonsterDestroyed -> apply(event)
         is MatchEnded -> apply(event)
+        is SpellActivated -> TODO()
       }
     }
     

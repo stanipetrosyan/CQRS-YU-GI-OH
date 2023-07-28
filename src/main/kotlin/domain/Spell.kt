@@ -6,21 +6,21 @@ data class Spell(
   val name: String,
   val type: Type,
   val text: String,
-  val effect: Effect
+  val effects: List<Effect>
 ) {
   enum class Type {
     Normal, Continuous, Field, Equip, QuickPlay, Ritual
   }
-  
-  data class Effect(
-    val type: EffectType,
-  )
 }
 
-sealed interface EffectType
+sealed class Effect
 data class DrawCards(
   val value: Int
-): EffectType
+): Effect()
 data class DestroyCard(
   val cardId: UUID
-): EffectType
+): Effect()
+
+data class DiscardCards(
+  val value: Int
+): Effect()

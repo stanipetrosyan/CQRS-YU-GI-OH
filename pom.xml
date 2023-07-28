@@ -16,7 +16,7 @@
         <kotlin.code.style>official</kotlin.code.style>
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
         <vertx-core.version>4.1.2</vertx-core.version>
-        <jackson.version>2.12.7.1</jackson.version>
+        <jackson.version>2.12.4</jackson.version>
     </properties>
 
     <repositories>
