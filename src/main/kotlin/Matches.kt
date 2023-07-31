@@ -1,6 +1,6 @@
 import domain.Match
-import io.vertx.core.eventbus.EventBus
 import io.vertx.core.json.JsonObject
+import port.EventBus
 import port.EventStore
 import java.util.*
 
@@ -19,7 +19,7 @@ class EventSourcedMatches(private val eventStore: EventStore, private val eventB
     match.changes.forEach { event ->
       eventStore.add(event)
       println("[${event.javaClass.simpleName}] Event emitted")
-      eventBus.publish(event.javaClass.simpleName, JsonObject.mapFrom(event))
+      eventBus.emit(event.javaClass.simpleName, JsonObject.mapFrom(event))
     }
   }
   

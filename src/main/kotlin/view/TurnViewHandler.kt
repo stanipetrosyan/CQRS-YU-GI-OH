@@ -1,31 +1,30 @@
 package view
 
 import domain.*
-import io.vertx.core.eventbus.EventBus
-import io.vertx.core.json.JsonObject
+import port.EventBus
 
 class TurnViewHandler(eventBus: EventBus) {
   
   private var turn: Turn = Turn(1, Turn.State.DrawPhase)
   
   init {
-    eventBus.consumer<JsonObject>(DrawPhaseSet::class.simpleName) {
-      consume(it.body().mapTo(DrawPhaseSet::class.java))
+    eventBus.on(DrawPhaseSet::class.java.simpleName) {
+      consume(it.mapTo(DrawPhaseSet::class.java))
     }
-    eventBus.consumer<JsonObject>(StandbyPhaseSet::class.simpleName) {
-      consume(it.body().mapTo(StandbyPhaseSet::class.java))
+    eventBus.on(StandbyPhaseSet::class.java.simpleName) {
+      consume(it.mapTo(StandbyPhaseSet::class.java))
     }
-    eventBus.consumer<JsonObject>(MainPhaseOneSet::class.simpleName) {
-      consume(it.body().mapTo(MainPhaseOneSet::class.java))
+    eventBus.on(MainPhaseOneSet::class.java.simpleName) {
+      consume(it.mapTo(MainPhaseOneSet::class.java))
     }
-    eventBus.consumer<JsonObject>(BattlePhaseSet::class.simpleName) {
-      consume(it.body().mapTo(BattlePhaseSet::class.java))
+    eventBus.on(BattlePhaseSet::class.java.simpleName) {
+      consume(it.mapTo(BattlePhaseSet::class.java))
     }
-    eventBus.consumer<JsonObject>(MainPhaseTwoSet::class.simpleName) {
-      consume(it.body().mapTo(MainPhaseTwoSet::class.java))
+    eventBus.on(MainPhaseTwoSet::class.java.simpleName) {
+      consume(it.mapTo(MainPhaseTwoSet::class.java))
     }
-    eventBus.consumer<JsonObject>(EndPhaseSet::class.simpleName) {
-      consume(it.body().mapTo(EndPhaseSet::class.java))
+    eventBus.on(EndPhaseSet::class.java.simpleName) {
+      consume(it.mapTo(EndPhaseSet::class.java))
     }
   }
   

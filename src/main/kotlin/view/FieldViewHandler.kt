@@ -1,34 +1,32 @@
 package view
 
 import domain.*
-import io.vertx.core.eventbus.EventBus
-import io.vertx.core.json.JsonObject
+import port.EventBus
 
 class FieldViewHandler(eventBus: EventBus) {
   
   private var decksCount: MutableMap<String, Int> = mutableMapOf()
   
   init {
-    eventBus.consumer<JsonObject>(MatchStarted::class.simpleName) {
-      consume(it.body().mapTo(MatchStarted::class.java))
+    eventBus.on(MatchStarted::class.java.simpleName) {
+      consume(it.mapTo(MatchStarted::class.java))
     }
-    
-    eventBus.consumer<JsonObject>(CardDrew::class.simpleName) {
-      consume(it.body().mapTo(CardDrew::class.java))
+
+    eventBus.on(CardDrew::class.java.simpleName) {
+      consume(it.mapTo(CardDrew::class.java))
     }
-    
-    eventBus.consumer<JsonObject>(MonsterNormalSummoned::class.simpleName) {
-      consume(it.body().mapTo(MonsterNormalSummoned::class.java))
+
+    eventBus.on(MonsterNormalSummoned::class.java.simpleName) {
+      consume(it.mapTo(MonsterNormalSummoned::class.java))
     }
-    
-    eventBus.consumer<JsonObject>(MonsterDestroyed::class.simpleName) {
-      consume(it.body().mapTo(MonsterDestroyed::class.java))
+
+    eventBus.on(MonsterDestroyed::class.java.simpleName) {
+      consume(it.mapTo(MonsterDestroyed::class.java))
     }
-    
-    eventBus.consumer<JsonObject>(MatchEnded::class.simpleName) {
-      consume(it.body().mapTo(MatchEnded::class.java))
+
+    eventBus.on(MatchEnded::class.java.simpleName) {
+      consume(it.mapTo(MatchEnded::class.java))
     }
-    
   }
   
   private fun consume(event: MatchEnded) {

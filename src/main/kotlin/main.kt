@@ -17,10 +17,8 @@ fun main() {
     .registerModule(JavaTimeModule())
     .registerModule(KotlinModule())
   
-  // setting command handler, event handler and aggregations
   val vertx = Vertx.vertx()
-  val eventBus = vertx.eventBus()
-  val myEventBus = DefaultEventBus(eventBus)
+  val eventBus = DefaultEventBus(vertx.eventBus())
   val matches = EventSourcedMatches(ListEventStore(), eventBus)
   val commandBus = DefaultCommandBus(matches)
   
@@ -28,11 +26,11 @@ fun main() {
   FieldViewHandler(eventBus)
   LifePointsViewHandler(eventBus)
   TurnViewHandler(eventBus)
-  ApplyEffectOnSpellActivated(myEventBus, commandBus)
-  InflictDamageOnDirectAttackDeclared(myEventBus, commandBus, matches)
-  InflictDamageOnAttackDeclared(myEventBus, commandBus, matches)
-  DestroyMonsterOnDamageInflicted(myEventBus, commandBus, matches)
-  EndMatchOnDamageInflicted(myEventBus, commandBus, matches)
+  ActiveEffectsOnSpellActivated(eventBus, commandBus)
+  InflictDamageOnDirectAttackDeclared(eventBus, commandBus, matches)
+  InflictDamageOnAttackDeclared(eventBus, commandBus, matches)
+  DestroyMonsterOnDamageInflicted(eventBus, commandBus, matches)
+  EndMatchOnDamageInflicted(eventBus, commandBus, matches)
   
   // set up
   val player = Player("home", 40, 8000)

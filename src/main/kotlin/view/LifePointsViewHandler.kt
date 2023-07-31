@@ -1,23 +1,24 @@
 package view
 
 import domain.*
-import io.vertx.core.eventbus.EventBus
 import io.vertx.core.json.JsonObject
+import port.EventBus
 
 class LifePointsViewHandler(eventBus: EventBus) {
   private var players = mutableMapOf<String, Int>()
   
   init {
-    eventBus.consumer<JsonObject>(MatchStarted::class.simpleName) {
-      consume(it.body().mapTo(MatchStarted::class.java))
+
+    eventBus.on(MatchStarted::class.java.simpleName) {
+      consume(it.mapTo(MatchStarted::class.java))
     }
-    
-    eventBus.consumer<JsonObject>(BattleDamageInflicted::class.simpleName) {
-      consume(it.body().mapTo(BattleDamageInflicted::class.java))
+
+    eventBus.on(BattleDamageInflicted::class.java.simpleName) {
+      consume(it.mapTo(BattleDamageInflicted::class.java))
     }
-    
-    eventBus.consumer<JsonObject>(DirectDamageInflicted::class.simpleName) {
-      consume(it.body().mapTo(DirectDamageInflicted::class.java))
+
+    eventBus.on(DirectDamageInflicted::class.java.simpleName) {
+      consume(it.mapTo(DirectDamageInflicted::class.java))
     }
   }
   
